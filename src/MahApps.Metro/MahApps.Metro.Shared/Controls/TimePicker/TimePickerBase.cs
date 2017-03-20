@@ -99,6 +99,8 @@ namespace MahApps.Metro.Controls
         private const string ElementSecondHand = "PART_SecondHand";
         private const string ElementSecondPicker = "PART_SecondPicker";
         private const string ElementTextBox = "PART_TextBox";
+        private const string ElementCloseButton = "PART_CloseButton";
+        private const string ElementOkButton = "PART_OkButton";
 
         #region Do not change order of fields inside this region
 
@@ -172,6 +174,8 @@ namespace MahApps.Metro.Controls
         private UIElement _secondHand;
         private Selector _secondInput;
         protected DatePickerTextBox _textBox;
+        private Button _okButton;
+        private Button _closeButton;
 
         static TimePickerBase()
         {
@@ -379,6 +383,8 @@ namespace MahApps.Metro.Controls
             _minuteHand = GetTemplateChild(ElementMinuteHand) as FrameworkElement;
             _secondHand = GetTemplateChild(ElementSecondHand) as FrameworkElement;
             _textBox = GetTemplateChild(ElementTextBox) as DatePickerTextBox;
+            _okButton = GetTemplateChild(ElementOkButton) as Button;
+            _closeButton = GetTemplateChild(ElementCloseButton) as Button;
 
             SetHandVisibility(HandVisibility);
             SetPickerVisibility(PickerVisibility);
@@ -486,11 +492,42 @@ namespace MahApps.Metro.Controls
             {
                 _button.Click += OnButtonClicked;
             }
+
+            if (_okButton != null)
+            {
+                _okButton.Click += OkButtonOnClick;
+            }
+
+            if (_closeButton != null)
+            {
+                _closeButton.Click += CloseButtonOnClick;
+            }
+
             if (_textBox != null)
             {
                 _textBox.TextChanged += OnTextChanged;
                 _textBox.LostFocus += InternalOnTextBoxLostFocus;
             }
+        }
+
+        private void CloseButtonOnClick(object sender, RoutedEventArgs routedEventArgs)
+        {
+            OnCloseButtonClicked();
+        }
+
+        protected virtual void OnCloseButtonClicked()
+        {
+            IsDropDownOpen = false;
+        }
+
+        private void OkButtonOnClick(object sender, RoutedEventArgs routedEventArgs)
+        {
+            OnOkButtonClicked();
+        }
+
+        protected virtual void OnOkButtonClicked()
+        {
+            IsDropDownOpen = false;
         }
 
         protected virtual void UnSubscribeEvents()
@@ -777,13 +814,22 @@ namespace MahApps.Metro.Controls
             return 0;
         }
 
+
         private void OnButtonClicked(object sender, RoutedEventArgs e)
         {
             IsDropDownOpen = !IsDropDownOpen;
             if (Popup != null)
             {
                 Popup.IsOpen = IsDropDownOpen;
+                if (IsDropDownOpen)
+                {
+                    OnPopupOpen();
+                }
             }
+        }
+
+        protected virtual void OnPopupOpen()
+        {
         }
 
         private void SetAmPmVisibility()

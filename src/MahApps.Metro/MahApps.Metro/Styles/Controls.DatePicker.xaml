@@ -100,7 +100,10 @@
                                    AllowsTransparency="True"
                                    Placement="Bottom"
                                    PlacementTarget="{Binding ElementName=PART_Root}"
-                                   StaysOpen="False" />
+                                   StaysOpen="False" >
+                            </Popup>
+                                   
+
                         </Grid>
                         <Border x:Name="DisabledVisualElement"
                                 Background="{DynamicResource ControlsDisabledBrush}"

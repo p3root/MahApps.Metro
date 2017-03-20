@@ -84,6 +84,10 @@
             set { SetValue(DisplayDateStartProperty, value); }
         }
 
+        public bool ShowCloseButton { get; set; }
+
+        public bool ShowOkButton { get; set; }
+
         /// <summary>
         ///     Gets or sets the day that is considered the beginning of the week.
         /// </summary>
@@ -142,7 +146,9 @@
 
         protected virtual void OnSelectedDateChanged(TimePickerBaseSelectionChangedEventArgs<DateTime?> e)
         {
+            DateTime? oldDate = e.OldValue;
             RaiseEvent(e);
+            DateTime? newValue = e.NewValue;
         }
 
         protected override void ApplyBindings()
@@ -159,6 +165,21 @@
                 _calendar.SetBinding(FlowDirectionProperty, GetBinding(FlowDirectionProperty));
                 _calendar.SelectedDatesChanged += OnCalendarSelectedDateChanged;
             }
+        }
+
+
+        private DateTime? _dateTimeOnOpen;
+
+        protected override void OnPopupOpen()
+        {
+            this._dateTimeOnOpen = SelectedDate;
+            base.OnPopupOpen();
+        }
+
+        protected override void OnCloseButtonClicked()
+        {
+            SelectedDate = this._dateTimeOnOpen;
+            base.OnCloseButtonClicked();
         }
 
         protected sealed override void ApplyCulture()
